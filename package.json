@@ -38,6 +38,7 @@
 	},
 	"dependencies": {
 		"@supabase/supabase-js": "^2.98.0",
+		"supabase": "^2.77.1",
 		"svelte-dnd-action": "^0.9.69",
 		"zod": "^4.3.6"
 	}
