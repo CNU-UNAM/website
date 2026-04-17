@@ -56,6 +56,7 @@
   
   .tag { color: var(--cnu-coral); font-weight: bold; text-transform: uppercase; font-size: 0.8rem; }
   h2 { margin: 0; font-size: 2rem; }
-  strong { display: block; margin-bottom: 0.5rem; color: #171717; }
+  h2 { color: var(--action-blue); }
+  strong { display: block; margin-bottom: 0.5rem; color: var(--action-blue); }
   p { line-height: 1.6; color: #444; margin-bottom: 1rem; }
 </style>

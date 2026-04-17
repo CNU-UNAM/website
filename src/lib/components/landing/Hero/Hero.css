@@ -23,7 +23,7 @@
 }
 
 .highlight {
-  color: var(--cnu-blue);
+  color: var(--action-blue);
 }
 
 .main-text {
@@ -54,8 +54,8 @@
 }
 
 .btn-primary {
-  background-color: var(--cnu-blue); /* Azul para acción profesional */
-  color: #171717 !important; /* Texto oscuro para legibilidad sobre azul claro */
+  background-color: var(--action-blue);
+  color: white !important;
   border: 1px solid rgba(0,0,0,0.05);
 }
 

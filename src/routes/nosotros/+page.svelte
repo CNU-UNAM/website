@@ -9,9 +9,9 @@
 
   // PALETA OFICIAL CNU (HARDCODED PARA SEGURIDAD)
   const PALETA = {
-    amarillo: '#FFF389',
-    coral: '#FF837D',
-    azul: '#AAC5FF'
+    amarillo: 'var(--cnu-yellow)',
+    coral: 'var(--cnu-coral)',
+    azul: 'var(--cnu-blue)'
   };
 
   const flipWords = [
@@ -108,7 +108,7 @@
     font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: 800;
     line-height: 1.1;
-    color: #171717;
+    color: var(--action-blue);
     letter-spacing: -2px;
   }
 
@@ -136,7 +136,7 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
   }
 
-  .stat-value { font-size: 3.5rem; font-weight: 800; color: #171717; }
+  .stat-value { font-size: 3.5rem; font-weight: 800; color: var(--action-blue); }
   .stat-label { font-size: 0.85rem; font-weight: 700; color: #999; text-transform: uppercase; margin-top: 8px; }
 
   /* BENTO */
@@ -160,7 +160,7 @@
   .bento-card:hover { transform: translateY(-8px); }
   .large { grid-column: span 2; }
 
-  .card-title { font-size: 2.2rem; font-weight: 800; color: #171717; margin-bottom: 10px; }
+  .card-title { font-size: 2.2rem; font-weight: 800; color: var(--action-blue); margin-bottom: 10px; }
   .card-desc { font-size: 1.2rem; color: #555; line-height: 1.5; }
 
   .mobile-break { display: none; }

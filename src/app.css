@@ -3,9 +3,12 @@
 /* Variables base del sitio - Versión oficial CNU */
 :root {
   /* Colores institucionales CNU - Paleta oficial */
-  --cnu-yellow: #FFF389;
-  --cnu-coral: #FF837D;
-  --cnu-blue: #AAC5FF;
+  --cnu-yellow: #fcea98;
+  --cnu-coral: #f08f99;
+  --cnu-blue: #919eb4;
+  --action-red: #e22136;
+  --action-blue: #25406b;
+  --action-yellow: #fad733;
 
   /* Alias para compatibilidad */
   --primary: var(--cnu-yellow);
@@ -175,7 +178,7 @@ h1, h2, h3, h4, h5, h6 {
 
   .auth-card {
     background: #ffffff;
-    border: 2px solid #AAC5FF; /* Blue CNU */
+    border: 2px solid var(--cnu-blue); /* Blue CNU */
     padding: 2.5rem;
     border-radius: 16px;
     width: 100%;
@@ -184,13 +187,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .card-header { text-align: center; margin-bottom: 2rem; }
-  h2 { font-size: 1.8rem; font-weight: 800; color: #171717; margin: 0; }
+  h2 { font-size: 1.8rem; font-weight: 800; color: var(--action-blue); margin: 0; }
   p { color: #666666; margin-top: 0.5rem; font-size: 0.95rem; }
 
   .form-stack { display: flex; flex-direction: column; gap: 1.25rem; }
   .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
   
-  label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #171717; }
+  label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--action-blue); }
   
   input {
     padding: 0.85rem;
@@ -201,7 +204,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.2s;
   }
 
-  input:focus { outline: none; border-color: #FF837D; background: #fff; }
+  input:focus { outline: none; border-color: var(--action-blue); background: #fff; }
 
   /* --- ACCIONES Y ESPACIADO (TU PETICIÓN) --- */
   .actions-container {
@@ -227,15 +230,15 @@ h1, h2, h3, h4, h5, h6 {
   button:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.05); }
   button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-  .btn-primary { background-color: #FF837D; color: white; } /* Coral CNU */
-  .btn-secondary { background-color: #FFF389; color: #171717; } /* Yellow CNU */
+  .btn-primary { background-color: var(--action-blue); color: white; }
+  .btn-secondary { background-color: var(--cnu-coral); color: var(--action-blue); }
 
   .error-box {
     background: #fff5f5;
-    color: #c53030;
+    color: var(--action-red);
     padding: 0.75rem;
     border-radius: 8px;
-    border: 1px solid #feb2b2;
+    border: 1px solid var(--action-red);
     text-align: center;
     font-size: 0.85rem;
     font-weight: 600;

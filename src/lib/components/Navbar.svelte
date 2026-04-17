@@ -111,7 +111,7 @@
   .logo {
     font-weight: bold;
     font-size: 24px;
-    color: var(--cnu-yellow);
+    color: var(--action-blue);
     letter-spacing: -0.5px;
     display: flex;
     align-items: center;
@@ -155,7 +155,7 @@
 
   .navLink:hover {
     color: var(--foreground);
-    background-color: rgba(255, 131, 125, 0.1);
+    background-color: rgba(240, 143, 153, 0.12);
     opacity: 1;
   }
 
@@ -178,8 +178,8 @@
 
   /* Special Button - Únete al Equipo (con alta especificidad) */
   .navbar .navLink.specialButton {
-    background-color: var(--cnu-coral) !important;
-    background-image: linear-gradient(135deg, var(--cnu-coral) 0%, #ff9a95 100%) !important;
+    background-color: var(--action-blue) !important;
+    background-image: linear-gradient(135deg, var(--action-blue) 0%, #355789 100%) !important;
     color: white !important;
     display: inline-flex;
     align-items: center;
@@ -191,8 +191,8 @@
     animation: gentlePulse 2s ease-in-out infinite;
     border: none; /* Por si algún estilo global añade borde */
     box-shadow:
-      inset 0 0 0 999px rgba(255, 131, 125, 0.9),
-      0 2px 8px rgba(255, 131, 125, 0.3);
+      inset 0 0 0 999px rgba(37, 64, 107, 0.9),
+      0 2px 8px rgba(37, 64, 107, 0.3);
     backface-visibility: hidden;
     will-change: opacity, box-shadow;
   }
@@ -202,7 +202,7 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(135deg, var(--cnu-coral) 0%, #ff9a95 100%);
+      linear-gradient(135deg, var(--action-blue) 0%, #355789 100%);
     z-index: 0;
     pointer-events: none;
   }
@@ -227,13 +227,13 @@
   .navbar .navLink.specialButton:hover {
     transform: translateY(-2px);
     box-shadow:
-      inset 0 0 0 999px rgba(255, 107, 100, 0.92),
-      0 4px 12px rgba(255, 131, 125, 0.4);
+      inset 0 0 0 999px rgba(26, 46, 79, 0.92),
+      0 4px 12px rgba(37, 64, 107, 0.4);
   }
 
   .navbar .navLink.specialButton:hover::before {
     background:
-      linear-gradient(135deg, #ff6b64 0%, var(--cnu-coral) 100%);
+      linear-gradient(135deg, #1a2e4f 0%, var(--action-blue) 100%);
   }
 
   .specialButtonLabel {
@@ -261,7 +261,7 @@
   .hamburgerLine {
     width: 25px;
     height: 3px;
-    background-color: #1a1a1a;
+    background-color: var(--action-blue);
     border-radius: 3px;
     transition: all 0.3s ease;
   }

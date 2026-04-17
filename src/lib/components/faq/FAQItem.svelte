@@ -36,12 +36,12 @@
   }
 
   .faq-card:hover {
-    border-color: #AAC5FF; /* var(--cnu-blue) */
+    border-color: var(--cnu-blue);
     box-shadow: 0 4px 12px rgba(170, 197, 255, 0.1);
   }
 
   .faq-card.active {
-    border-color: #AAC5FF;
+    border-color: var(--cnu-blue);
     box-shadow: 0 8px 24px rgba(170, 197, 255, 0.15);
   }
 
@@ -63,25 +63,25 @@
     font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: #FF837D; /* var(--cnu-coral) */
+    color: var(--cnu-coral);
     letter-spacing: 0.05em;
   }
 
   .q {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #171717;
+    color: var(--action-blue);
   }
 
   .status-icon {
-    color: #AAC5FF;
+    color: var(--cnu-blue);
     transition: transform 0.3s ease, color 0.3s ease;
     flex-shrink: 0;
   }
 
   .status-icon.rotated {
     transform: rotate(135deg);
-    color: #FF837D;
+    color: var(--action-blue);
   }
 
   .faq-body { border-top: 1px solid #f5f5f5; }

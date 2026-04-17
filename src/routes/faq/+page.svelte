@@ -13,11 +13,11 @@
   
   // Categorías y sus colores asignados
   const cats = [
-    { name: "Todos", color: "#FFF389" }, // Coral
-    { name: "Comunidad", color: "#FF837D" }, // Amarillo
-    { name: "Empresas", color: "#AAC5FF" }, // Azul
-    { name: "Academia", color: "#FFF389" }, // Repite ciclo...
-    { name: "Emprendedores", color: "#FF837D" }
+    { name: "Todos", color: "var(--cnu-yellow)" },
+    { name: "Comunidad", color: "var(--cnu-coral)" },
+    { name: "Empresas", color: "var(--cnu-blue)" },
+    { name: "Academia", color: "var(--cnu-yellow)" },
+    { name: "Emprendedores", color: "var(--cnu-coral)" }
   ];
 
   $: filtered = faqs.filter(f => 
@@ -90,7 +90,7 @@
     outline: none;
     transition: border-color 0.3s;
   }
-  input:focus { border-color: #AAC5FF; }
+  input:focus { border-color: var(--action-blue); }
 
   /* NAVEGACIÓN DE FILTROS */
   .filter-nav {
@@ -102,10 +102,16 @@
   }
 
   .filter-nav button {
+    width: auto;
+    min-width: fit-content;
     padding: 8px 20px;
     border-radius: 20px;
     border: 1px solid #eee;
     background: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -117,7 +123,7 @@
   .filter-nav button.active {
     background-color: var(--active-color);
     border-color: var(--active-color);
-    color: #171717;
+    color: var(--action-blue);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   }
@@ -129,7 +135,7 @@
   /* SOPORTE */
   .support-wrap { margin-top: 60px; padding-bottom: 60px; }
   .support-card {
-    background: linear-gradient(135deg, #f0f4ff, #AAC5FF);
+    background: linear-gradient(135deg, #f0f4ff, var(--cnu-blue));
     padding: 40px;
     border-radius: 20px;
     text-align: center;
@@ -137,7 +143,7 @@
     margin: 0 auto;
   }
   .btn-black { 
-    background: #171717; 
+    background: var(--action-blue); 
     color: white; 
     padding: 12px 30px; 
     border-radius: 8px; 

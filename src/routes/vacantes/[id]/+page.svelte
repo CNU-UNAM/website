@@ -343,7 +343,7 @@
   .team { display: inline-block; background: var(--cnu-yellow); padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.75rem; }
   .card-content p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
   .load-more { text-align: center; margin-top: 2rem; }
-  .load-more button { background: var(--cnu-coral); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 2rem; font-weight: bold; cursor: pointer; }
+  .load-more button { background: var(--action-blue); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 2rem; font-weight: bold; cursor: pointer; }
   .load-more button:disabled { opacity: 0.6; }
   .loading, .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
 
@@ -457,7 +457,7 @@
     font-family: inherit;
   }
   .submit-button {
-    background: var(--cnu-coral);
+    background: var(--action-blue);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;

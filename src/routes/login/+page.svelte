@@ -60,13 +60,13 @@
   }
 
   .error {
-    color: #c53030;
+    color: var(--action-red);
     background: #fff5f5;
     padding: 0.75rem;
     border-radius: 8px;
     margin-top: 1rem;
     text-align: center;
     font-size: 0.85rem;
-    border: 1px solid #feb2b2;
+    border: 1px solid var(--action-red);
   }
 </style>

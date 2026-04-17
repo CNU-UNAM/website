@@ -1,10 +1,9 @@
   .section {
-    --cnu-yellow: #FFF389;
     --max-width: 1200px;
     --padding-x: 1rem;
     --foreground: #000;
 
-    background-color: var(--cnu-yellow, #FFF389);
+    background-color: var(--cnu-yellow, #fcea98);
     padding: 80px 0;
   }
 

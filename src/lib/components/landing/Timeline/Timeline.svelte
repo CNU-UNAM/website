@@ -260,20 +260,16 @@
 
 <style>
   :root {
-    /* Paleta CNU - SOLO estos colores */
-    --cnu-yellow: #FFF389;
-    --cnu-coral: #FF837D;
-    --cnu-blue: #AAC5FF;
     --cnu-blue-dark: #465c7f;
-    --cnu-red: #e5324b;
-    --cnu-gold: #fdda3d;
+    --cnu-red: var(--action-red);
+    --cnu-gold: var(--action-yellow);
 
     /* Aplicaciones de color */
-    --primary-light: var(--cnu-yellow);
-    --primary: var(--cnu-gold);
-    --primary-dark: var(--cnu-coral);
-    --accent: var(--cnu-blue);
-    --accent-dark: var(--cnu-blue-dark);
+    --primary-light: var(--action-yellow);
+    --primary: var(--action-yellow);
+    --primary-dark: var(--action-red);
+    --accent: var(--action-blue);
+    --accent-dark: var(--action-blue);
     --highlight: var(--cnu-red);
 
     /* Fondos y textos */
@@ -301,7 +297,10 @@
   }
 
   .section {
-  background: var(--cnu-blue);  /* Cambia esto */
+  background:
+    radial-gradient(circle at top left, rgba(250, 215, 51, 0.24), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(226, 33, 54, 0.2), transparent 30%),
+    var(--action-blue);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -318,11 +317,11 @@
     padding: 4rem 3rem;
     max-width: 900px;
     width: 100%;
-    box-shadow: 0 20px 25px -5px rgba(70, 92, 127, 0.1),
-      0 10px 10px -5px rgba(70, 92, 127, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(37, 64, 107, 0.18),
+      0 10px 10px -5px rgba(37, 64, 107, 0.08);
     text-align: center;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(250, 215, 51, 0.22);
     backdrop-filter: blur(10px);
   }
 
@@ -374,7 +373,7 @@
   .event-icon {
     width: 72px;
     height: 72px;
-    background: linear-gradient(135deg, var(--cnu-blue), var(--cnu-blue-dark));
+    background: linear-gradient(135deg, var(--action-yellow), var(--action-red));
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -382,7 +381,7 @@
     font-size: 2rem;
     margin-bottom: 2rem;
     color: white;
-    box-shadow: 0 10px 25px rgba(70, 92, 127, 0.2);
+    box-shadow: 0 10px 25px rgba(226, 33, 54, 0.18);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -390,7 +389,7 @@
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
-    color: var(--text-muted);
+    color: var(--action-blue);
     letter-spacing: -0.05em;
   }
 
@@ -398,7 +397,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.25rem;
-    color: var(--accent-dark);
+    color: var(--action-red);
     letter-spacing: -0.025em;
   }
 
@@ -421,7 +420,7 @@
   .slider-track {
     position: relative;
     height: 6px;
-    background: var(--border-color);
+    background: rgba(37, 64, 107, 0.16);
     border-radius: 8px;
     margin-bottom: 2rem;
     user-select: none;
@@ -432,7 +431,7 @@
     top: 0;
     left: 0;
     height: 6px;
-    background: linear-gradient(90deg, var(--cnu-yellow), var(--cnu-gold), var(--cnu-coral));
+    background: linear-gradient(90deg, var(--action-yellow), var(--cnu-coral), var(--action-red));
     border-radius: 8px;
     width: 0%;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -443,18 +442,18 @@
     top: -4px;
     width: 2px;
     height: 14px;
-    background: var(--border-color);
+    background: rgba(37, 64, 107, 0.24);
     border-radius: 1px;
     transform: translateX(-1px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .tick.active {
-    background: linear-gradient(135deg, var(--cnu-coral), var(--cnu-red));
+    background: linear-gradient(135deg, var(--action-yellow), var(--action-red));
     height: 18px;
     top: -6px;
     width: 3px;
-    box-shadow: 0 0 8px rgba(229, 50, 75, 0.3);
+    box-shadow: 0 0 10px rgba(226, 33, 54, 0.32);
   }
 
   .year-labels {
@@ -475,10 +474,10 @@
   }
 
   .year-label.active {
-    color: var(--cnu-red);
+    color: var(--action-red);
     font-weight: 700;
     transform: translateX(-50%) scale(1.1);
-    text-shadow: 0 0 8px rgba(229, 50, 75, 0.2);
+    text-shadow: 0 0 8px rgba(226, 33, 54, 0.2);
   }
 
   .timeline-slider {
@@ -503,9 +502,9 @@
     height: 22px;
     border-radius: 50%;
     background: white;
-    border: 3px solid var(--cnu-red);
+    border: 3px solid var(--action-red);
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(229, 50, 75, 0.2);
+    box-shadow: 0 4px 12px rgba(226, 33, 54, 0.22);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: -8px;
     position: relative;
@@ -514,15 +513,15 @@
 
   .timeline-slider::-webkit-slider-thumb:hover {
     transform: scale(1.15);
-    box-shadow: 0 6px 20px rgba(229, 50, 75, 0.3),
-      0 0 0 8px rgba(229, 50, 75, 0.1);
-    border-color: var(--cnu-coral);
+    box-shadow: 0 6px 20px rgba(226, 33, 54, 0.28),
+      0 0 0 8px rgba(250, 215, 51, 0.18);
+    border-color: var(--action-yellow);
   }
 
   .timeline-slider::-webkit-slider-thumb:active {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(229, 50, 75, 0.3),
-      0 0 0 4px rgba(229, 50, 75, 0.1);
+    box-shadow: 0 4px 12px rgba(226, 33, 54, 0.3),
+      0 0 0 4px rgba(250, 215, 51, 0.18);
   }
 
   .timeline-slider::-moz-range-thumb {
@@ -530,9 +529,9 @@
     height: 22px;
     border-radius: 50%;
     background: white;
-    border: 3px solid var(--cnu-red);
+    border: 3px solid var(--action-red);
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(229, 50, 75, 0.2);
+    box-shadow: 0 4px 12px rgba(226, 33, 54, 0.22);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     z-index: 2;
@@ -540,8 +539,8 @@
 
   .timeline-slider::-moz-range-thumb:hover {
     transform: scale(1.15);
-    box-shadow: 0 6px 20px rgba(229, 50, 75, 0.3);
-    border-color: var(--cnu-coral);
+    box-shadow: 0 6px 20px rgba(226, 33, 54, 0.28);
+    border-color: var(--action-yellow);
   }
 
   .fade-transition {

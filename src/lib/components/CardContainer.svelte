@@ -43,7 +43,7 @@
 <style>
   .agnostic-card {
     background: #fff;
-    border: 2px solid #AAC5FF;
+    border: 2px solid var(--cnu-blue);
     padding: 2.5rem;
     border-radius: 16px;
     width: 100%;
@@ -51,7 +51,7 @@
   }
 
   .card-header { text-align: center; margin-bottom: 2rem; }
-  h2 { font-weight: 800; font-size: 1.75rem; margin: 0; color: #171717; }
+  h2 { font-weight: 800; font-size: 1.75rem; margin: 0; color: var(--action-blue); }
   p { color: #666; margin-top: 0.5rem; }
 
   .form-wrapper { display: flex; flex-direction: column; }
@@ -91,11 +91,11 @@
     cursor: pointer;
   }
 
-  .btn-primary { background: #FF837D; color: white; }
+  .btn-primary { background: var(--action-blue); color: white; }
 
   .actions-area :global(.btn-secondary-cnu) {
-    background: #FFF389;
-    color: #171717;
+    background: var(--cnu-coral);
+    color: var(--action-blue);
     width: 100%;
     padding: 1rem;
     border-radius: 8px;

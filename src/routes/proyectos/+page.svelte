@@ -101,6 +101,7 @@
     padding: 10px 20px;
     border: 1px solid #ddd;
     background: white;
+    color: var(--action-blue);
     cursor: pointer;
     border-radius: 8px;
     font-weight: bold;

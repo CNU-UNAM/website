@@ -1,5 +1,5 @@
 .carousel-wrapper {
-  --foreground: #000;
+  --foreground: var(--action-blue);
   --text-muted: #666;
   position: relative;
   display: flex;
@@ -90,7 +90,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 8px;
-  color: var(--foreground, #000);
+  color: var(--foreground);
 }
 
 .projectDescription {
@@ -168,7 +168,7 @@
 }
 
 .error {
-  color: #d32f2f;
+  color: var(--action-red);
 }
 
 .empty {

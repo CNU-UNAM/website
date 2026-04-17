@@ -3,7 +3,7 @@
   export let index: number;
 
   // Hardcoded tokens del manual de estilo para evitar cálculos de JS
-  const colors = ['#AAC5FF', '#FF837D', '#FFF389'];
+  const colors = ['var(--cnu-blue)', 'var(--cnu-coral)', 'var(--cnu-yellow)'];
   const accent = colors[index % colors.length];
 </script>
 
@@ -69,7 +69,7 @@
   .card-title {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
-    color: #171717;
+    color: var(--action-blue);
   }
 
   .card-text {
@@ -87,7 +87,7 @@
   .card-link {
     margin-top: auto;
     font-weight: bold;
-    color: #171717;
+    color: var(--action-blue);
     text-decoration: underline;
     text-underline-offset: 4px;
   }

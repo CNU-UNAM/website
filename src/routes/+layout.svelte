@@ -1,4 +1,6 @@
 <script lang="ts">
+	import './layout.css';
+	import '../app.css';
 	import { onMount } from 'svelte';
 	import { supabase } from '$lib/supabase';
 	import { userStore } from '$lib/stores/session';
