@@ -39,7 +39,7 @@
     
     <header class="hero">
       <div in:fly={{ y: 20, duration: 800 }}>
-        <span class="eyebrow" style="color: {PALETA.coral}">Somos</span>
+        <span class="eyebrow" style="color: {PALETA.coral}">Nosotros</span>
         <h1 class="title-tight">
           Ingeniería que <br class="mobile-break" />
           <TextRotator items={flipWords} />

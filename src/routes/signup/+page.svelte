@@ -1,56 +1,110 @@
 <script lang="ts">
   import { supabase } from '$lib/supabase';
   import { goto } from '$app/navigation';
+  import CardContainer from '$lib/components/CardContainer.svelte';
 
-  let email = '';
-  let password = '';
   let name = '';
   let team = '';
+  let email = '';
+  let password = '';
+  let isLoading = false;
+  let errorMessage = '';
 
-  async function signup() {
-    // Validate email and password fields before proceeding
+  async function handleSignup() {
     if (!email || !password || !name || !team) {
-      return alert('All fields are required.');
+      errorMessage = 'Todos los campos son obligatorios.';
+      return;
     }
 
-    // Call Supabase signUp method
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
-    });
+    isLoading = true;
+    errorMessage = '';
 
-    if (error) {
-      return alert(error.message);
+    try {
+      // 1. Registro de usuario en Auth
+      const { data, error: authError } = await supabase.auth.signUp({ 
+        email, 
+        password 
+      });
+
+      if (authError) throw authError;
+
+      // 2. Creación del perfil en la tabla de base de datos
+      if (data.user) {
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: data.user.id,
+          name,
+          team,
+          email,
+          usertype: 'member'
+        });
+
+        if (profileError) throw profileError;
+        
+        // Redirección al éxito
+        goto('/app');
+      }
+    } catch (err: any) {
+      errorMessage = err.message;
+    } finally {
+      isLoading = false;
     }
-
-    const uid = data.user?.id;
-    if (!uid) {
-      return alert('User ID not found after signup.');
-    }
-
-    // Insert profile into `profiles` table
-    const { error: profileError } = await supabase.from('profiles').insert({
-      id: uid,
-      email,
-      name,
-      team,
-      usertype: 'member'
-    });
-
-    if (profileError) {
-      return alert(profileError.message);
-    }
-
-    // Redirect to the /app page
-    goto('/app');
   }
 </script>
 
-<h1>Crear cuenta</h1>
+<main class="page-container">
+  <CardContainer 
+    title="Crear cuenta" 
+    subtitle="Únete a la comunidad CNU"
+    submitLabel="Registrarme"
+    {isLoading}
+    on:submit={handleSignup}
+  >
+    <label for="name">Nombre</label>
+    <input id="name" type="text" bind:value={name} placeholder="Tu nombre" required />
 
-<input bind:value={name} placeholder="Nombre" />
-<input bind:value={team} placeholder="Equipo" />
-<input bind:value={email} placeholder="Email" />
-<input type="password" bind:value={password} placeholder="Password" />
+    <label for="team">Equipo</label>
+    <input id="team" type="text" bind:value={team} placeholder="Nombre de tu equipo" required />
 
-<button on:click={signup}>Registrarme</button>
+    <label for="email">Email</label>
+    <input id="email" type="email" bind:value={email} placeholder="correo@cnu.edu" required />
+
+    <label for="password">Contraseña</label>
+    <input id="password" type="password" bind:value={password} placeholder="••••••••" required />
+
+    {#if errorMessage}
+      <p class="error">{errorMessage}</p>
+    {/if}
+
+    <div slot="actions">
+      <button 
+        type="button" 
+        class="btn-secondary-cnu" 
+        on:click={() => goto('/login')}
+      >
+        ¿Ya tienes cuenta? Inicia sesión
+      </button>
+    </div>
+  </CardContainer>
+</main>
+
+<style>
+  .page-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fcfcfc;
+    padding: 1rem;
+  }
+
+  .error {
+    color: #c53030;
+    background: #fff5f5;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    border: 1px solid #feb2b2;
+  }
+</style>
