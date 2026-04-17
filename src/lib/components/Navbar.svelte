@@ -55,7 +55,7 @@
     <a
       href="/nosotros"
       class="navLink"
-      on:click|preventDefault={() => handleNavigation('/nosotrox')}
+      on:click|preventDefault={() => handleNavigation('/nosotros')}
     >
       Nosotros
     </a>
