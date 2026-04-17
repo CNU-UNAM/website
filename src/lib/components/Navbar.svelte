@@ -76,7 +76,7 @@
       class="navLink specialButton"
       on:click|preventDefault={() => handleNavigation('/login')}
     >
-      Únete al Equipo
+      <span class="specialButtonLabel">Únete al Equipo</span>
     </a>
   </nav>
 
@@ -104,6 +104,7 @@
     top: 0;
     z-index: 100;
     backdrop-filter: blur(10px);
+    isolation: isolate;
     flex-wrap: nowrap;
   }
 
@@ -177,16 +178,36 @@
 
   /* Special Button - Únete al Equipo (con alta especificidad) */
   .navbar .navLink.specialButton {
-    background: linear-gradient(135deg, var(--cnu-coral) 0%, #ff9a95 100%) !important;
+    background-color: var(--cnu-coral) !important;
+    background-image: linear-gradient(135deg, var(--cnu-coral) 0%, #ff9a95 100%) !important;
     color: white !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 600;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
     animation: gentlePulse 2s ease-in-out infinite;
     border: none; /* Por si algún estilo global añade borde */
+    box-shadow:
+      inset 0 0 0 999px rgba(255, 131, 125, 0.9),
+      0 2px 8px rgba(255, 131, 125, 0.3);
+    backface-visibility: hidden;
+    will-change: opacity, box-shadow;
   }
 
   .navbar .navLink.specialButton::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, var(--cnu-coral) 0%, #ff9a95 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .navbar .navLink.specialButton::after {
     content: '';
     position: absolute;
     top: -50%;
@@ -198,16 +219,26 @@
             rgba(255, 255, 255, 0.3) 50%,
             transparent 70%);
     animation: shimmer 3s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform;
   }
 
   .navbar .navLink.specialButton:hover {
-    background: linear-gradient(135deg, #ff6b64 0%, var(--cnu-coral) 100%) !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 131, 125, 0.4);
+    box-shadow:
+      inset 0 0 0 999px rgba(255, 107, 100, 0.92),
+      0 4px 12px rgba(255, 131, 125, 0.4);
   }
 
-  .navbar .navLink.specialButton::after {
-    display: none;
+  .navbar .navLink.specialButton:hover::before {
+    background:
+      linear-gradient(135deg, #ff6b64 0%, var(--cnu-coral) 100%);
+  }
+
+  .specialButtonLabel {
+    position: relative;
+    z-index: 2;
   }
 
   /* Hamburguesa */
@@ -373,12 +404,16 @@
 
   @keyframes gentlePulse {
     0%, 100% {
-      transform: scale(1);
-      box-shadow: 0 2px 8px rgba(255, 131, 125, 0.3);
+      opacity: 1;
+      box-shadow:
+        inset 0 0 0 999px rgba(255, 131, 125, 0.9),
+        0 2px 8px rgba(255, 131, 125, 0.3);
     }
     50% {
-      transform: scale(1.03);
-      box-shadow: 0 4px 16px rgba(255, 131, 125, 0.5);
+      opacity: 0.96;
+      box-shadow:
+        inset 0 0 0 999px rgba(255, 131, 125, 0.9),
+        0 4px 16px rgba(255, 131, 125, 0.5);
     }
   }
 
