@@ -46,25 +46,30 @@
   <!-- Menú de navegación -->
   <nav class="nav" class:navOpen={isMenuOpen}>
     <a
-      href="/quienes-somos"
-      class="navLink"
-      on:click|preventDefault={() => handleNavigation('/quienes-somos')}
-    >
-      ¿Quiénes somos?
-    </a>
-    <a
-      href="/nuestro-equipo"
-      class="navLink"
-      on:click|preventDefault={() => handleNavigation('/nuestro-equipo')}
-    >
-      Nuestro Equipo
-    </a>
-    <a
       href="/proyectos"
       class="navLink"
       on:click|preventDefault={() => handleNavigation('/proyectos')}
     >
       Proyectos
+    </a>
+    <a
+      href="/nosotros"
+      class="navLink"
+      on:click|preventDefault={() => handleNavigation('/nosotrox')}
+    >
+      Nosotros
+    </a>
+    <a
+      href="/participa"
+      class="navLink"
+      on:click|preventDefault={() => handleNavigation('/participa')}
+    >Participa</a>
+    <a
+      href="/faq"
+      class="navLink"
+      on:click|preventDefault={() => handleNavigation('/faq')}
+    >
+      FAQ
     </a>
     <a
       href="/login"
