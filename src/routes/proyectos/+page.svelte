@@ -44,6 +44,13 @@
     selectedProject = project;
     showModal = true;
   }
+
+  function handleProjectKeydown(event: KeyboardEvent, project: any) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openModal(project);
+    }
+  }
 </script>
 
 <main class="projects-page">
@@ -56,9 +63,15 @@
       <div class="loading">Cargando ecosistema...</div>
     {:else}
       <div class="bento-grid">
-        {#each paginatedItems as item (item.id)}
-          <div on:click={() => openModal(item)} role="button" tabindex="0">
-            <ProjectCard {item} index={item.id} />
+        {#each paginatedItems as item, index (item.id)}
+          <div
+            on:click={() => openModal(item)}
+            on:keydown={(event) => handleProjectKeydown(event, item)}
+            role="button"
+            tabindex="0"
+            aria-label={"Abrir proyecto " + item.title}
+          >
+            <ProjectCard {item} {index} />
           </div>
         {/each}
       </div>

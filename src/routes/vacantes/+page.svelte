@@ -4,6 +4,8 @@
   import { debounce } from '$lib/utils/debounce';
   import { faculties, facultyCareerMap } from '$lib/data/dataCarreras';
 
+  const cardColors = ['var(--cnu-yellow)', 'var(--cnu-coral)', 'var(--cnu-blue)'];
+
   // ========== Variables del listado (originales) ==========
   let searchText = '';
   let selectedTeams: string[] = [];
@@ -93,6 +95,13 @@
   function truncate(text: string, maxLength: number) {
     if (!text) return '';
     return text.length <= maxLength ? text : text.slice(0, maxLength) + '...';
+  }
+
+  function handleVacancyKeydown(event: KeyboardEvent, vacancy: any) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openModal(vacancy);
+    }
   }
 
   // ========== Funciones del modal ==========
@@ -201,12 +210,18 @@
       <div class="no-results">No se encontraron vacantes con esos criterios.</div>
     {:else}
       <div class="vacancies-grid">
-        {#each vacancies as vac}
-          <div class="vacancy-card" on:click={() => openModal(vac)}>
-            <div class="card-image">
-              <img src="https://placehold.co/400x200?text=Vacante" alt={vac.title} />
-            </div>
+        {#each vacancies as vac, index}
+          <div
+            class="vacancy-card"
+            style="--card-accent: {cardColors[index % cardColors.length]}"
+            on:click={() => openModal(vac)}
+            on:keydown={(event) => handleVacancyKeydown(event, vac)}
+            role="button"
+            tabindex="0"
+            aria-label={"Abrir vacante " + vac.title}
+          >
             <div class="card-content">
+              <span class="card-kicker">Vacante abierta</span>
               <h3>{vac.title}</h3>
               <span class="team">{vac.team || 'Sin área'}</span>
               <p>{truncate(vac.description || '', 100)}</p>
@@ -297,13 +312,58 @@
   .checkbox-group { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
   .checkbox-group label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; }
   .vacancies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-  .vacancy-card { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; cursor: pointer; }
-  .vacancy-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-  .card-image img { width: 100%; height: 160px; object-fit: cover; }
-  .card-content { padding: 1rem; }
-  .card-content h3 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }
-  .team { display: inline-block; background: var(--cnu-yellow); padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.75rem; }
-  .card-content p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
+  .vacancy-card {
+    background: #fff;
+    border-radius: 32px;
+    border: 3px solid var(--card-accent);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: inherit;
+    display: flex;
+    min-height: 260px;
+    cursor: pointer;
+  }
+  .vacancy-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  }
+  .card-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .card-kicker {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    font-size: 0.8rem;
+    color: var(--cnu-coral);
+    margin-bottom: 1rem;
+  }
+  .card-content h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 2rem;
+    line-height: 1.1;
+    color: var(--action-blue);
+  }
+  .team {
+    display: inline-flex;
+    align-self: flex-start;
+    background: color-mix(in srgb, var(--card-accent) 18%, white);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--action-blue);
+  }
+  .card-content p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+  }
   .load-more { text-align: center; margin-top: 2rem; }
   .load-more button { background: var(--action-blue); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 2rem; font-weight: bold; cursor: pointer; }
   .load-more button:disabled { opacity: 0.6; }
@@ -385,5 +445,8 @@
   @media (max-width: 768px) {
     .vacancies-grid { grid-template-columns: 1fr; }
     .modal-container { padding: 1rem; }
+    .vacancy-card { min-height: auto; border-radius: 28px; }
+    .card-content { padding: 1.5rem; }
+    .card-content h3 { font-size: 1.6rem; }
   }
 </style>

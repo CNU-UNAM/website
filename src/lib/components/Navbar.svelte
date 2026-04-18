@@ -62,7 +62,7 @@
     <a
       href="/participa"
       class="navLink"
-      on:click|preventDefault={() => handleNavigation('/participa')}
+      on:click|preventDefault={() => handleNavigation('/vacantes')}
     >Participa</a>
     <a
       href="/faq"
