@@ -125,16 +125,16 @@
       {/if}
     </section>
 
-    <!-- Footer CTA -->
-    <footer class="support-wrap">
+    <!-- Contacto CTA -->
+    <section class="support-wrap">
       <div class="support-card">
         <div class="support-text">
           <h2>¿Dudas adicionales?</h2>
           <p>Nuestro equipo está listo para ayudarte con lo que necesites.</p>
         </div>
-        <a href="mailto:hola@cnu.mx" class="btn-primary">Escríbenos</a>
+        <a href="mailto:unamcnu@gmail.com" class="btn-primary">Escríbenos</a>
       </div>
-    </footer>
+    </section>
 
   </div>
 </div>
@@ -182,27 +182,26 @@
   /* ── Header ── */
   .faq-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 64px;
     animation: fadeUp 0.6s ease both;
   }
 
   .title {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-size: clamp(2.5rem, 8vw, 4rem);
     font-weight: 800;
     color: var(--action-blue);
-    letter-spacing: -0.025em;
+    letter-spacing: -2px;
     line-height: 1.1;
-    margin-bottom: 0.75rem !important;
-    margin-top: 0 !important;
+    margin: 0 0 1rem 0;
   }
 
   .coral { color: var(--cnu-coral); }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #666;
-    max-width: 480px;
-    margin: 0 auto 1.75rem;
+    max-width: 600px;
+    margin: 1rem auto 0;
     line-height: 1.6;
   }
 
@@ -210,7 +209,7 @@
   .search-box {
     position: relative;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 1.75rem auto 0;
   }
 
   .search-icon {
@@ -392,7 +391,7 @@
     color: rgba(255,255,255,0.75);
   }
 
-  .btn-primary {
+  .support-card .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -408,7 +407,7 @@
     flex-shrink: 0;
   }
 
-  .btn-primary:hover {
+  .support-card .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   }

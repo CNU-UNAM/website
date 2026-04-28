@@ -306,7 +306,8 @@
     .nav {
       position: fixed;
       top: 0;
-      right: -100%;
+      right: 0;
+      transform: translateX(100%);
       width: 280px;
       height: 100vh;
       flex-direction: column;
@@ -314,13 +315,18 @@
       background: rgb(246, 243, 243);
       box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
       padding: 80px 30px 30px;
-      transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0s 0.4s;
       z-index: 101;
       align-items: flex-start;
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .navOpen {
-      right: 0;
+      transform: translateX(0);
+      visibility: visible;
+      pointer-events: auto;
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0s;
     }
 
     .navLink {
