@@ -1,12 +1,11 @@
-// after
-import netlify from '@sveltejs/adapter-netlify';
+import adapter from '@sveltejs/adapter-auto';
 
-// svelte.config.js
 export default {
   kit: {
-    adapter: netlify(),
+    adapter: adapter(),
     prerender: {
-      entries: ['/', '/about'] // list pages you actually want prerendered
+      crawl: false,
+      entries: ['/', '/other-page-you-want'] // list only pages you want prerendered
     }
   }
 };
