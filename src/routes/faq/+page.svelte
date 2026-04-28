@@ -19,13 +19,15 @@
   let query = "";
   let currentCat = "Todos";
 
-  const cats = [
-    { name: "Todos",         color: "var(--cnu-yellow)" },
-    { name: "Comunidad",     color: "var(--cnu-coral)"  },
-    { name: "Empresas",      color: "var(--cnu-blue)"   },
-    { name: "Academia",      color: "var(--cnu-yellow)" },
-    { name: "Emprendedores", color: "var(--cnu-coral)"  }
-  ];
+  const catColors: Record<string, { bg: string; text: string }> = {
+    Todos:         { bg: "var(--action-blue)",  text: "#fff" },
+    Comunidad:     { bg: "var(--cnu-coral)",    text: "var(--action-blue)" },
+    Empresas:      { bg: "var(--cnu-yellow)",   text: "var(--action-blue)" },
+    Academia:      { bg: "var(--cnu-blue)",     text: "var(--action-blue)" },
+    Emprendedores: { bg: "var(--action-yellow)",text: "var(--action-blue)" }
+  };
+
+  const cats = Object.keys(catColors).map(name => ({ name, ...catColors[name] }));
 
   // Conteo por categoría para las badges
   const countFor = (cat: string) =>
@@ -86,7 +88,7 @@
         <button
           class="filter-btn"
           class:active={currentCat === cat.name}
-          style="--active-color: {cat.color}"
+          style="--active-color: {cat.bg}; --active-text: {cat.text}"
           on:click={() => currentCat = cat.name}
           aria-pressed={currentCat === cat.name}
         >
@@ -105,7 +107,7 @@
         </p>
         {#each filtered as faq, i (faq.question)}
           <div class="faq-item-wrap" style="animation-delay: {i * 45}ms">
-            <FAQItem {...faq} colorIndex={i} />
+            <FAQItem {...faq} catColor={catColors[faq.category]?.bg ?? 'var(--cnu-coral)'} />
           </div>
         {/each}
       {:else}
@@ -184,30 +186,6 @@
     animation: fadeUp 0.6s ease both;
   }
 
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.8);
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 100px;
-    padding: 5px 16px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: #888;
-    margin-bottom: 1.25rem;
-    backdrop-filter: blur(8px);
-  }
-
-  .eyebrow-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--cnu-coral);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
   .title {
     font-size: clamp(2.2rem, 5vw, 3.5rem);
     font-weight: 800;
@@ -281,19 +259,19 @@
 
   /* ── Filtros ── */
   .filter-nav {
-    display: flex;
-    justify-content: center;
+    display: grid;
     gap: 8px;
     margin-bottom: 2rem;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(3, 1fr);
     animation: fadeUp 0.6s ease 0.1s both;
   }
 
   .filter-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 8px 18px;
+    padding: 10px 18px;
     border-radius: 100px;
     border: 1.5px solid #e8e8e8;
     background: rgba(255,255,255,0.85);
@@ -303,6 +281,7 @@
     font-size: 0.875rem;
     color: #555;
     transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    width: 100%;
   }
 
   .filter-btn:hover:not(.active) {
@@ -314,7 +293,7 @@
   .filter-btn.active {
     background-color: var(--active-color);
     border-color: var(--active-color);
-    color: var(--action-blue);
+    color: var(--active-text, #fff);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
@@ -390,7 +369,7 @@
   .support-wrap { margin-top: 4rem; }
 
   .support-card {
-    background: linear-gradient(135deg, #556ba7, var(--cnu-blue));
+    background: var(--action-blue);
     padding: 40px 48px;
     border-radius: 20px;
     display: flex;
@@ -414,10 +393,13 @@
   }
 
   .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #fff;
     color: var(--action-blue);
     padding: 12px 28px;
-    border-radius: 10px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 700;
     font-size: 0.9rem;
@@ -443,6 +425,12 @@
   }
 
   /* ── Responsive ── */
+  @media (max-width: 1023px) {
+    .filter-nav {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
   @media (max-width: 768px) {
     .support-card {
       flex-direction: column;
@@ -450,7 +438,10 @@
       padding: 32px 24px;
     }
 
-    .filter-nav { gap: 6px; }
+    .filter-nav {
+      grid-template-columns: 1fr;
+    }
+
     .filter-btn { font-size: 0.8rem; padding: 7px 14px; }
   }
 </style>

@@ -48,6 +48,7 @@
     border-radius: 16px;
     width: 100%;
     max-width: 420px;
+    margin: 0 auto;
   }
 
   .card-header { text-align: center; margin-bottom: 2rem; }

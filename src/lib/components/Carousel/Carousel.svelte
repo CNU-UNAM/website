@@ -42,8 +42,12 @@
       }));
 
       setTimeout(() => {
+        if (carouselContainer && items.length > 0) {
+          const mid = Math.floor(items.length / 2);
+          currentIndex = mid;
+          carouselContainer.scrollLeft = mid * getCardWidth();
+        }
         updateScrollButtons();
-        updateCurrentIndex();
       }, 100);
     } catch (err) {
       error = err instanceof Error ? err.message : 'Error desconocido';
@@ -59,11 +63,8 @@
   }
 
   function updateScrollButtons() {
-    if (carouselContainer) {
-      const { scrollLeft, scrollWidth, clientWidth } = carouselContainer;
-      canScrollLeft = scrollLeft > 10;
-      canScrollRight = scrollLeft + clientWidth < scrollWidth - 10;
-    }
+    canScrollLeft = true;
+    canScrollRight = true;
   }
 
   function updateCurrentIndex() {
@@ -82,13 +83,24 @@
 
   function scrollLeft() {
     if (carouselContainer) {
-      carouselContainer.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+      if (currentIndex === 0) {
+        const last = items.length - 1;
+        currentIndex = last;
+        carouselContainer.scrollLeft = last * getCardWidth();
+      } else {
+        carouselContainer.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+      }
     }
   }
 
   function scrollRight() {
     if (carouselContainer) {
-      carouselContainer.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+      if (currentIndex === items.length - 1) {
+        currentIndex = 0;
+        carouselContainer.scrollLeft = 0;
+      } else {
+        carouselContainer.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+      }
     }
   }
 

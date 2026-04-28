@@ -170,16 +170,6 @@
       </div>
     </div>
 
-    <!-- Dot navigation -->
-    <div class="dot-nav">
-      {#each timelineData as _, index}
-        <button
-          class="dot {index === currentIndex ? 'active' : ''}"
-          aria-label="Evento {index + 1}"
-          on:click={() => { updateTimeline(index); handleUserInteraction(); }}
-        ></button>
-      {/each}
-    </div>
 
   </div>
 </section>

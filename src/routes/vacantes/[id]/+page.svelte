@@ -1,101 +1,48 @@
 <script lang="ts">
-  import { supabase } from '$lib/supabase';
-  import { onMount } from 'svelte';
-  import { debounce } from '$lib/utils/debounce';
+  import { page } from '$app/stores';
+  import { enhance } from '$app/forms';
   import { faculties, facultyCareerMap } from '$lib/data/dataCarreras';
 
-  // ========== Variables del listado ==========
-  let searchText = '';
-  let selectedTeams: string[] = [];
-  let teamsList: string[] = [];
-  let itemsPerPage = 9;
-  let currentPage = 1;
-  let totalCount = 0;
-  let loading = false;
-  let vacancies: any[] = [];
-
-  // ========== Variables del modal ==========
-  let showModal = false;
-  let selectedVacancy: any | null = null;
   let formData = {
     full_name: '',
     email: '',
     faculty: '',
     career: '',
     phone: '',
-    cover_letter: '',
-    cv_file: null as File | null
+    cover_letter: ''
   };
   let selectedFaculty = '';
   let careersList: string[] = [];
   let isSubmitting = false;
 
-  // ========== Funciones del listado ==========
-  async function loadTeams() {
-    const { data, error } = await supabase
-      .from('vacancies_postings')
-      .select('team')
-      .eq('active', 1)
-      .not('team', 'is', null);
-    if (!error && data) {
-      teamsList = [...new Set(data.map(item => item.team).filter(Boolean))];
-    }
+  $: vacancy = $page.data.vacancy;
+
+  $: if ($page.form?.type === 'success') {
+    alert('¡Postulación enviada con éxito!');
+    resetForm();
+    setTimeout(() => {
+      $page.form = null;
+    }, 100);
+  } else if ($page.form?.type === 'error') {
+    alert('Error: ' + ($page.form.error?.message || 'No se pudo procesar la solicitud.'));
+    setTimeout(() => {
+      $page.form = null;
+    }, 100);
   }
 
-  async function loadVacancies(resetPage = true) {
-    if (resetPage) currentPage = 1;
-    loading = true;
-    try {
-      let query = supabase
-        .from('vacancies_postings')
-        .select('*', { count: 'exact' })
-        .eq('active', 1);
-
-      if (selectedTeams.length > 0) {
-        query = query.in('team', selectedTeams);
-      }
-      if (searchText.trim()) {
-        query = query.or(
-          `title.ilike.%${searchText}%,description.ilike.%${searchText}%,skills.ilike.%${searchText}%`
-        );
-      }
-
-      const from = (currentPage - 1) * itemsPerPage;
-      const to = from + itemsPerPage - 1;
-      query = query.range(from, to).order('created_at', { ascending: false });
-
-      const { data, error, count } = await query;
-      if (error) throw error;
-      vacancies = data || [];
-      totalCount = count || 0;
-    } catch (err) {
-      console.error(err);
-    } finally {
-      loading = false;
-    }
+  function resetForm() {
+    formData = {
+      full_name: '',
+      email: '',
+      faculty: '',
+      career: '',
+      phone: '',
+      cover_letter: ''
+    };
+    selectedFaculty = '';
+    careersList = [];
   }
 
-  const debouncedLoad = debounce(() => loadVacancies(true), 300);
-
-  $: {
-    searchText;
-    selectedTeams;
-    debouncedLoad();
-  }
-
-  function loadMore() {
-    if (currentPage * itemsPerPage < totalCount) {
-      currentPage++;
-      loadVacancies(false);
-    }
-  }
-
-  function truncate(text: string, maxLength: number) {
-    if (!text) return '';
-    return text.length <= maxLength ? text : text.slice(0, maxLength) + '...';
-  }
-
-  // ========== Funciones del modal ==========
   function formatDate(dateStr: string | null): string {
     if (!dateStr) return 'Fecha no publicada';
     const date = new Date(dateStr);
@@ -106,68 +53,6 @@
     });
   }
 
-  function openModal(vacancy: any) {
-    selectedVacancy = vacancy;
-    showModal = true;
-    // Resetear formulario
-    formData = {
-      full_name: '',
-      email: '',
-      faculty: '',
-      career: '',
-      phone: '',
-      cover_letter: '',
-      cv_file: null
-    };
-    selectedFaculty = '';
-    careersList = [];
-  }
-
-  function closeModal() {
-    showModal = false;
-    selectedVacancy = null;
-  }
-
-  function handleFileChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files.length > 0) {
-      formData.cv_file = target.files[0];
-    }
-  }
-
-  async function handleSubmit(event: Event) {
-    event.preventDefault();
-    if (!selectedVacancy) return;
-
-    const formElement = event.target as HTMLFormElement;
-    const formDataObj = new FormData(formElement);
-    formDataObj.append('vacancyId', selectedVacancy.id);
-    if (formData.cv_file) {
-      formDataObj.append('cv', formData.cv_file);
-    }
-
-    isSubmitting = true;
-    try {
-      const response = await fetch('?/apply', {
-        method: 'POST',
-        body: formDataObj
-      });
-      const result = await response.json();
-      if (result.success) {
-        alert('¡Postulación enviada con éxito!');
-        closeModal();
-      } else {
-        alert('Error: ' + (result.message || 'No se pudo procesar la solicitud.'));
-      }
-    } catch (error) {
-      console.error('Error al enviar:', error);
-      alert('Ocurrió un error inesperado. Por favor, inténtalo de nuevo.');
-    } finally {
-      isSubmitting = false;
-    }
-  }
-
-  // Reactividad para carreras según facultad
   $: {
     if (selectedFaculty) {
       careersList = facultyCareerMap[selectedFaculty as keyof typeof facultyCareerMap] || [];
@@ -176,304 +61,465 @@
       careersList = [];
     }
   }
-
-  onMount(() => {
-    loadTeams();
-    loadVacancies(true);
-  });
 </script>
 
-<div class="section">
-  <div class="container">
-    <h1 class="title">Vacantes disponibles</h1>
-
-    <div class="filters">
-      <div class="search-box">
-        <input type="text" placeholder="Buscar por título, descripción o habilidades..." bind:value={searchText} />
-      </div>
-      <div class="teams-filter">
-        <label>Filtrar por área (múltiple):</label>
-        <div class="checkbox-group">
-          {#each teamsList as team}
-            <label>
-              <input type="checkbox" bind:group={selectedTeams} value={team} />
-              {team}
-            </label>
-          {/each}
-        </div>
-      </div>
-    </div>
-
-    {#if loading && vacancies.length === 0}
-      <div class="loading">Cargando vacantes...</div>
-    {:else if vacancies.length === 0}
-      <div class="no-results">No se encontraron vacantes con esos criterios.</div>
-    {:else}
-      <div class="vacancies-grid">
-        {#each vacancies as vac}
-          <div class="vacancy-card" on:click={() => openModal(vac)}>
-            <div class="card-image">
-              <img src="https://placehold.co/400x200?text=Vacante" alt={vac.title} />
-            </div>
-            <div class="card-content">
-              <h3>{vac.title}</h3>
-              <span class="team">{vac.team || 'Sin área'}</span>
-              <p>{truncate(vac.description || '', 100)}</p>
-            </div>
-          </div>
-        {/each}
-      </div>
-
-      {#if currentPage * itemsPerPage < totalCount}
-        <div class="load-more">
-          <button on:click={loadMore} disabled={loading}>
-            {loading ? 'Cargando...' : 'Cargar más'}
-          </button>
-        </div>
-      {/if}
-    {/if}
+<div class="vacancy-detail-page">
+  <!-- Fondo decorativo -->
+  <div class="bg-decoration" aria-hidden="true">
+    <div class="grid-overlay"></div>
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
   </div>
-</div>
 
-<!-- Modal con información de la vacante + formulario -->
-{#if showModal && selectedVacancy}
-  <div class="modal-overlay" on:click={closeModal}>
-    <div class="modal-container" on:click|stopPropagation>
-      <div class="modal-header">
-        <h2>Postular a: {selectedVacancy.title}</h2>
-        <button class="close-button" on:click={closeModal}>×</button>
-      </div>
+  <div class="container">
+    <!-- Header -->
+    <header class="page-header">
+      <h1 class="title">{vacancy.title}</h1>
+      <p class="subtitle">{vacancy.team || 'Sin área especificada'}</p>
+    </header>
 
-      <!-- Información detallada de la vacante -->
-      <div class="vacancy-info">
-        <div class="info-row">
-          <span class="label">Área:</span>
-          <span class="value">{selectedVacancy.team || 'Sin área'}</span>
+    <div class="content-grid">
+      <!-- Columna izquierda: Información de la vacante -->
+      <article class="vacancy-info-section">
+        <div class="info-card">
+          <div class="info-row">
+            <span class="label">Área:</span>
+            <span class="badge">{vacancy.team || 'Sin área'}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Publicado:</span>
+            <span class="value">{formatDate(vacancy.created_at)}</span>
+          </div>
         </div>
-        <div class="info-row">
-          <span class="label">Publicado:</span>
-          <span class="value">{formatDate(selectedVacancy.created_at)}</span>
-        </div>
-        <div class="info-description">
-          <div class="label">Descripción:</div>
-          <div class="value">{selectedVacancy.description || 'Sin descripción disponible.'}</div>
-        </div>
-        {#if selectedVacancy.skills}
-          <div class="info-skills">
-            <div class="label">Habilidades requeridas:</div>
-            <div class="skills-tags">
-              {#each selectedVacancy.skills.split(',').map((s: string) => s.trim()) as skill}
+
+        <section class="info-section">
+          <h2 class="section-title">Descripción</h2>
+          <div class="section-content">
+            {vacancy.description || 'Sin descripción disponible.'}
+          </div>
+        </section>
+
+        {#if vacancy.skills}
+          <section class="info-section">
+            <h2 class="section-title">Habilidades requeridas</h2>
+            <div class="skills-container">
+              {#each vacancy.skills.split(',').map((s: string) => s.trim()) as skill}
                 <span class="skill-tag">{skill}</span>
               {/each}
             </div>
-          </div>
+          </section>
         {/if}
-      </div>
+      </article>
 
-      <div class="form-divider">Formulario de postulación</div>
+      <!-- Columna derecha: Formulario -->
+      <aside class="form-section">
+        <div class="form-card">
+          <h2 class="form-title">Postularse</h2>
+          <p class="form-subtitle">Completa el formulario para enviar tu candidatura</p>
 
-      <!-- Formulario -->
-      <form on:submit={handleSubmit} enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="full_name">Nombre completo *</label>
-          <input type="text" id="full_name" name="full_name" bind:value={formData.full_name} required />
+          <form method="POST" action="?/apply" enctype="multipart/form-data" use:enhance>
+            <input type="hidden" name="vacancyId" value={vacancy.id} />
+
+            <div class="form-group">
+              <label for="full_name">Nombre completo *</label>
+              <input
+                type="text"
+                id="full_name"
+                name="full_name"
+                bind:value={formData.full_name}
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo electrónico *</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                bind:value={formData.email}
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="faculty">Facultad *</label>
+              <select
+                id="faculty"
+                name="faculty"
+                bind:value={selectedFaculty}
+                required
+              >
+                <option value="">Selecciona una facultad</option>
+                {#each faculties as fac}
+                  <option value={fac}>{fac}</option>
+                {/each}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="career">Carrera *</label>
+              <select
+                id="career"
+                name="career"
+                bind:value={formData.career}
+                required
+                disabled={!selectedFaculty}
+              >
+                <option value="">Selecciona una carrera</option>
+                {#each careersList as career}
+                  <option value={career}>{career}</option>
+                {/each}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Número de teléfono</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                bind:value={formData.phone}
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="cover_letter">¿Por qué te interesa el CNU?</label>
+              <textarea
+                id="cover_letter"
+                name="cover_letter"
+                bind:value={formData.cover_letter}
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="cv">Adjuntar CV (PDF, DOCX, TXT) *</label>
+              <input
+                type="file"
+                id="cv"
+                name="cv"
+                accept=".pdf,.docx,.txt"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="submit-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Enviando...' : 'Postularme ahora'}
+            </button>
+          </form>
         </div>
-
-        <div class="form-group">
-          <label for="email">Correo electrónico *</label>
-          <input type="email" id="email" name="email" bind:value={formData.email} required />
-        </div>
-
-        <div class="form-group">
-          <label for="faculty">Facultad *</label>
-          <select id="faculty" name="faculty" bind:value={selectedFaculty} required>
-            <option value="">Selecciona una facultad</option>
-            {#each faculties as fac}
-              <option value={fac}>{fac}</option>
-            {/each}
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="career">Carrera *</label>
-          <select id="career" name="career" bind:value={formData.career} required disabled={!selectedFaculty}>
-            <option value="">Selecciona una carrera</option>
-            {#each careersList as career}
-              <option value={career}>{career}</option>
-            {/each}
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="phone">Número de teléfono</label>
-          <input type="tel" id="phone" name="phone" bind:value={formData.phone} />
-        </div>
-
-        <div class="form-group">
-          <label for="cover_letter">¿Por qué te interesa entrar al CNU?</label>
-          <textarea id="cover_letter" name="cover_letter" bind:value={formData.cover_letter} rows="4"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="cv">Adjuntar CV (PDF, DOCX, TXT) *</label>
-          <input type="file" id="cv" name="cv" accept=".pdf,.docx,.txt" on:change={handleFileChange} required />
-        </div>
-
-        <button type="submit" class="submit-button" disabled={isSubmitting}>
-          {isSubmitting ? 'Enviando...' : 'Postularme'}
-        </button>
-      </form>
+      </aside>
     </div>
   </div>
-{/if}
+</div>
 
 <style>
-  /* ===== Estilos del listado (originales) ===== */
-  .filters { margin-bottom: 2rem; display: flex; flex-direction: column; gap: 1rem; }
-  .search-box input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-size: 1rem; }
-  .teams-filter { background: #f9f9f9; padding: 1rem; border-radius: 0.5rem; }
-  .checkbox-group { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
-  .checkbox-group label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; }
-  .vacancies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-  .vacancy-card { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; cursor: pointer; }
-  .vacancy-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-  .card-image img { width: 100%; height: 160px; object-fit: cover; }
-  .card-content { padding: 1rem; }
-  .card-content h3 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }
-  .team { display: inline-block; background: var(--cnu-yellow); padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.75rem; }
-  .card-content p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
-  .load-more { text-align: center; margin-top: 2rem; }
-  .load-more button { background: var(--action-blue); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 2rem; font-weight: bold; cursor: pointer; }
-  .load-more button:disabled { opacity: 0.6; }
-  .loading, .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
+  /* ── Base ── */
+  .vacancy-detail-page {
+    padding: 80px 0;
+    background-color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
 
-  /* ===== Estilos del modal y la información de la vacante ===== */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
   }
-  .modal-container {
-    background-color: white;
-    width: 90%;
-    max-width: 700px;
-    max-height: 90vh;
-    overflow-y: auto;
-    border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    padding: 1.5rem;
+
+  /* ── Fondo decorativo ── */
+  .bg-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
   }
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--border-color);
+
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.4) 20%,
+      rgba(0, 0, 0, 0.4) 80%,
+      transparent 100%
+    );
   }
-  .modal-header h2 {
-    font-size: 1.5rem;
+
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+  }
+  .glow-1 {
+    width: 500px;
+    height: 500px;
+    background: var(--cnu-coral);
+    top: -120px;
+    right: -100px;
+  }
+  .glow-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--cnu-blue);
+    bottom: 0;
+    left: -80px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .title {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--action-blue);
+    letter-spacing: -1px;
+    margin: 0 0 12px 0;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--cnu-coral);
+    font-weight: 600;
     margin: 0;
   }
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    line-height: 1;
+
+  /* ── Grid ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: start;
   }
-  .vacancy-info {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 0.5rem;
-    border: 1px solid var(--border-color);
+
+  /* ── Sección de información ── */
+  .vacancy-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
+
+  .info-card {
+    background: #f8f7f4;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e8e8e8;
+  }
+
   .info-row {
-    margin-bottom: 0.5rem;
     display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
   }
-  .info-row .label,
-  .info-description .label,
-  .info-skills .label {
-    font-weight: bold;
-    min-width: 100px;
-    color: #2d3748;
+
+  .info-row:last-child {
+    margin-bottom: 0;
   }
-  .info-row .value {
-    color: #4a5568;
+
+  .label {
+    font-weight: 700;
+    color: var(--action-blue);
+    min-width: 80px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
-  .info-description {
-    margin-bottom: 1rem;
+
+  .badge {
+    display: inline-block;
+    background: var(--cnu-yellow);
+    color: var(--action-blue);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
   }
-  .info-description .value {
-    margin-top: 0.25rem;
-    line-height: 1.5;
-    color: #4a5568;
+
+  .value {
+    color: #555;
+    font-size: 1rem;
   }
-  .info-skills .skills-tags {
+
+  /* ── Secciones de información ── */
+  .info-section {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--action-blue);
+    margin: 0 0 16px 0;
+    letter-spacing: -0.5px;
+  }
+
+  .section-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+    white-space: pre-wrap;
+  }
+
+  /* ── Skills ── */
+  .skills-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    gap: 8px;
   }
-  .info-skills .skill-tag {
-    background: #edf2f7;
-    padding: 0.25rem 0.75rem;
-    border-radius: 2rem;
-    font-size: 0.8rem;
-    color: #2d3748;
+
+  .skill-tag {
+    display: inline-block;
+    background: #f0f0f0;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #e0e0e0;
   }
-  .form-divider {
-    font-weight: bold;
-    margin: 1rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--cnu-yellow);
-    color: #2d3748;
+
+  /* ── Formulario ── */
+  .form-section {
+    position: sticky;
+    top: 100px;
   }
+
+  .form-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--action-blue);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+  }
+
+  .form-subtitle {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0 0 24px 0;
+  }
+
   .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 18px;
   }
+
   .form-group label {
     display: block;
-    margin-bottom: 0.3rem;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--action-blue);
   }
-  .form-group input, .form-group select, .form-group textarea {
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     width: 100%;
-    padding: 0.6rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    padding: 10px 12px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
     font-family: inherit;
+    transition: border-color 0.2s;
   }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--action-blue);
+    box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+  }
+
   .submit-button {
-    background: var(--action-blue);
+    width: 100%;
+    background: linear-gradient(135deg, var(--action-blue), #1a4d7a);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 2rem;
-    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    width: 100%;
-    margin-top: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
   }
+
+  .submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(24, 95, 165, 0.2);
+  }
+
   .submit-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-  @media (max-width: 768px) {
-    .vacancies-grid { grid-template-columns: 1fr; }
-    .modal-container { padding: 1rem; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .form-section {
+      position: static;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .vacancy-detail-page {
+      padding: 48px 0;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .title {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+    }
+
+    .content-grid {
+      gap: 24px;
+    }
+
+    .info-card,
+    .info-section,
+    .form-card {
+      padding: 16px;
+    }
   }
 </style>

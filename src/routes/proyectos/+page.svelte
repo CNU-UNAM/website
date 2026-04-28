@@ -230,48 +230,12 @@
     animation: fadeUp 0.6s ease both;
   }
 
-  .header-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    padding: 6px 16px;
-    margin-bottom: 1.5rem;
-  }
-
-  .dot {
-    width: 7px; height: 7px;
-    background: var(--cnu-coral);
-    border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  .eyebrow-text {
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
   .title-tight {
     font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: 800;
     line-height: 1.1;
     color: var(--action-blue);
     letter-spacing: -2px;
-  }
-
-  .title {
-    font-family: var(--font-display);
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    font-weight: 400;
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    margin: 0 0 1rem;
   }
 
   .coral {
@@ -428,7 +392,6 @@
   /* ── Responsive ── */
   @media (max-width: 768px) {
     .bento-grid { grid-template-columns: 1fr; }
-    .title { font-size: 2.6rem; }
     .pagination { gap: 1rem; }
     .page-btn { padding: 9px 14px; font-size: 12px; }
   }

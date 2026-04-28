@@ -3,8 +3,6 @@
   import ProjectsProgress from "$lib/components/landing/ProjectsProgress/ProjectsProgress.svelte";
   import Destacados from "$lib/components/landing/Destacados/Destacados.svelte";
   import Timeline from "$lib/components/landing/Timeline/Timeline.svelte";
- 
-
 </script>
 
 <Hero />
