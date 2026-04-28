@@ -5,7 +5,7 @@ export default {
     adapter: adapter(),
     prerender: {
       crawl: false,
-      entries: ['/', '/other-page-you-want'] // list only pages you want prerendered
+      entries: ['/', '/nosotros', '/faq', '/login', '/oportunidades', '/signup']
     }
   }
 };
