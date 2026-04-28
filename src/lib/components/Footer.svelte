@@ -27,13 +27,13 @@
         <a href="mailto:unamcnu@gmail.com" title="Email" class="social-link">
           <img src="{iconBase}:mail.svg?color=%23666666" alt="Email" />
         </a>
-        <a href="https://linkedin.com" target="_blank" title="LinkedIn" class="social-link">
+        <a href="https://mx.linkedin.com/company/centro-de-negocios-universitario" target="_blank" title="LinkedIn" class="social-link">
           <img src="{iconBase}:linkedin.svg?color=%23666666" alt="LinkedIn" />
         </a>
-        <a href="https://instagram.com" target="_blank" title="Instagram" class="social-link">
+        <a href="https://www.instagram.com/cnu_unam/" target="_blank" title="Instagram" class="social-link">
           <img src="{iconBase}:instagram.svg?color=%23666666" alt="Instagram" />
         </a>
-        <a href="https://youtube.com" target="_blank" title="YouTube" class="social-link">
+        <a href="https://www.youtube.com/channel/UCVqdhM-kymF4I0-Gqwh8d9A" target="_blank" title="YouTube" class="social-link">
           <img src="{iconBase}:youtube.svg?color=%23666666" alt="YouTube" />
         </a>
       </div>
