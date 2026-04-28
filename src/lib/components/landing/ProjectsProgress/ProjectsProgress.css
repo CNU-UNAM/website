@@ -1,29 +1,111 @@
-  .section {
-    --max-width: 1200px;
-    --padding-x: 1rem;
-    --foreground: #000;
+/* ── Tokens ── */
+.section {
+  --max-width: 1200px;
+  --padding-x: 1rem;
+  --foreground: #000;
 
-    background-color: var(--cnu-yellow, #fcea98);
-    padding: 80px 0;
-  }
+  background-color: var(--cnu-yellow, #fcea98);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
 
-  .container {
-    max-width: var(--max-width, 1200px);
-    margin: 0 auto;
-    padding: 0 var(--padding-x, 1rem);
-  }
+/* Brillo radial que sigue el cursor (activado con JS via --mx/--my) */
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 55% 45% at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
 
-  .title {
+.section:hover::before {
+  opacity: 1;
+}
+
+/* ── Container ── */
+.container {
+  max-width: var(--max-width, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--padding-x, 1rem);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Título ── */
+.title {
   font-size: var(--title-size-desktop);
   font-weight: 700;
   line-height: 1.3;
   margin-bottom: 2rem;
   color: var(--foreground);
   text-align: center;
-  }
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: default;
+  transition:
+    letter-spacing 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s ease;
+}
 
-  @media (max-width: 768px) {
-    .title {
-      font-size: 2rem;
-    }
+/* Subrayado coral que crece desde el centro en hover */
+.title::before {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 3px;
+  background: var(--cnu-coral, #D85A30);
+  border-radius: 2px;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Sombra duplicada del texto en hover */
+.title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: var(--cnu-coral, #D85A30);
+  transform: translate(3px, 3px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  text-align: center;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.title:hover {
+  letter-spacing: 0.015em;
+  color: #111;
+}
+
+.title:hover::before {
+  width: 80%;
+}
+
+.title:hover::after {
+  opacity: 0.13;
+  transform: translate(5px, 5px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
   }
+}

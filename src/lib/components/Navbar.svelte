@@ -287,6 +287,7 @@
   @media (max-width: 768px) {
     .navbar {
       padding: 16px 20px;
+      position: relative;
     }
 
     .logoImage {
@@ -295,6 +296,11 @@
 
     .hamburger {
       display: flex;
+      position: absolute;
+      right: 20px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
     }
 
     .nav {
@@ -374,6 +380,10 @@
     .nav {
       width: 260px;
       padding: 70px 25px 25px;
+    }
+
+    .hamburger {
+      right: 16px;
     }
 
     .hamburgerLine {

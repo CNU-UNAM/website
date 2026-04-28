@@ -35,6 +35,7 @@
 
 <style>
   dialog {
+    margin: auto;
     border: none;
     border-radius: 16px;
     padding: 0;

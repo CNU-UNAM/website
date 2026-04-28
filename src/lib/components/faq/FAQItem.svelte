@@ -3,10 +3,11 @@
   export let question: string;
   export let answer: string;
   export let category: string;
+  export let catColor: string = 'var(--cnu-coral)';
   let isOpen = false;
 </script>
 
-<div class="faq-card" class:active={isOpen}>
+<div class="faq-card" class:active={isOpen} style="--cat-color: {catColor}">
   <button class="faq-btn" on:click={() => isOpen = !isOpen} aria-expanded={isOpen}>
     <div class="text-group">
       <span class="cat">{category}</span>
@@ -36,12 +37,12 @@
   }
 
   .faq-card:hover {
-    border-color: var(--cnu-blue);
+    border-color: var(--cat-color);
     box-shadow: 0 4px 12px rgba(170, 197, 255, 0.1);
   }
 
   .faq-card.active {
-    border-color: var(--cnu-blue);
+    border-color: var(--cat-color);
     box-shadow: 0 8px 24px rgba(170, 197, 255, 0.15);
   }
 
@@ -63,7 +64,7 @@
     font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: var(--cnu-coral);
+    color: var(--cat-color);
     letter-spacing: 0.05em;
   }
 
@@ -74,14 +75,14 @@
   }
 
   .status-icon {
-    color: var(--cnu-blue);
+    color: var(--cat-color);
     transition: transform 0.3s ease, color 0.3s ease;
     flex-shrink: 0;
   }
 
   .status-icon.rotated {
     transform: rotate(135deg);
-    color: var(--action-blue);
+    color: var(--cat-color);
   }
 
   .faq-body { border-top: 1px solid #f5f5f5; }

@@ -21,7 +21,6 @@
 
     <h3 class="card-title">{item.title}</h3>
     <p class="card-text">{item.description || item.content || ''}</p>
-    <a href="/proyectos/{item.id}" class="card-link">Explorar</a>
   </div>
 </div>
 
@@ -63,7 +62,6 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    justify-content: flex-end;
   }
 
   .card-title {
@@ -84,14 +82,6 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  .card-link {
-    margin-top: auto;
-    font-weight: 700;
-    color: var(--action-blue);
-    text-decoration: underline;
-    text-underline-offset: 4px;
   }
 
   @media (max-width: 768px) {
